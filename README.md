@@ -28,30 +28,29 @@ Open **http://localhost:4787** in a browser.
 6. Type a follow-up instruction (e.g. "add a search box") and click **Start
    Agent** again — the agent edits the same files in place.
 
-## Hosted Windows connector POC
+## Hosted Claude-native POC
 
-The customer-facing dashboard can be hosted from `mcp-server/` on Render.
-It does not ask customers to run terminal commands. Instead, **Download &
-Connect** installs a per-user Windows connector which:
+The customer-facing dashboard is hosted from `mcp-server/` on Render. It does
+not download a Fluid executable or show terminal commands. **Connect Claude
+Code** creates a 15-minute pairing code and opens the official Claude Code VS
+Code deep link with a connection request already filled in. The user reviews
+and submits that request inside Claude Code.
 
-- starts automatically at Windows login;
-- opens a one-time browser pairing link;
-- detects the customer's existing Claude Code installation and login;
-- opens a native workspace folder picker on request;
-- receives jobs over an outbound authenticated WebSocket; and
-- runs Claude Code locally and streams activity back to the hosted dashboard.
+The repository is also a Claude plugin marketplace. Its `fluid` plugin bundles
+the hosted OAuth-protected MCP server and two skills: connect to Fluid, and
+build the current Fluid project. On the first connection, the user approves
+adding/installing that plugin in Claude's graphical plugin manager and completes
+Fluid authorization in the browser. Later connections go directly to pairing.
 
-Set these variables on the Render web service:
+Set this variable on the Render web service:
 
 ```text
-FLUID_BASE_URL=https://your-render-service.onrender.com
-CONNECTOR_DOWNLOAD_URL=https://github.com/rumman-acc/fluid-code-poc/releases/download/connector-latest/FluidConnectorSetup.exe
+FLUID_BASE_URL=https://fluid-code-poc.onrender.com
 ```
 
-The workflow in `.github/workflows/build-connector.yml` produces and publishes
-the unsigned Windows POC installer whenever connector code changes on `main`.
-The repository workflow must have permission to create release assets. Windows
-may show an unknown-publisher warning because this POC is not code-signed.
+The hosted flow is intentionally client-initiated: a website cannot silently
+install a Claude plugin, submit a Claude prompt, or choose a local workspace.
+Those actions remain visible user approvals inside Claude Code/VS Code.
 
 ## How agent invocation actually works on this machine
 
@@ -194,15 +193,11 @@ Fluid MCP Server                    →  new component, sits next to (or inside)
 Fluid SaaS                          →  project requirements, governance policy, approvals
 ```
 
-Planned Fluid MCP tools (not implemented):
+Implemented Fluid MCP tools:
 
-- `get_project_requirements()` — pull the actual spec/ticket instead of a free-text prompt
-- `get_project_context()` — prior decisions, architecture constraints
-- `get_governance_policy()` — what the agent is/isn't allowed to touch
-- `get_allowed_tools()` — org-level tool allow/deny list
-- `request_approval()` — human-in-the-loop gate for risky actions
-- `report_agent_activity()` — replaces/augments today's local stdout parsing with a structured, server-side audit trail
-- `report_file_change()` — same, for file diffs specifically
+- `connect_fluid(pairing_code)` — confirms Claude Code in the waiting browser session
+- `get_project_requirements()` — retrieves the current project specification
+- `report_agent_activity(message)` — sends structured progress to the Fluid dashboard
 
 Where it sits: the Fluid MCP Server is a Fluid-SaaS-hosted (or edge) service.
 Both `claude` and `codex` already support connecting to a remote MCP server

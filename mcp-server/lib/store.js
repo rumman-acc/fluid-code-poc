@@ -1,5 +1,6 @@
 'use strict';
 
+const crypto = require('crypto');
 const { EventEmitter } = require('events');
 
 /**
@@ -29,6 +30,64 @@ Requirements:
 };
 
 const activity = [];
+const claudePairings = new Map();
+const PAIRING_TTL_MS = 15 * 60 * 1000;
+
+function createPairingCode() {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const bytes = crypto.randomBytes(8);
+  return Array.from(bytes, (byte) => alphabet[byte % alphabet.length]).join('');
+}
+
+function cleanExpiredPairings() {
+  const now = Date.now();
+  for (const [browserToken, pairing] of claudePairings) {
+    if (pairing.expiresAtMs <= now && !pairing.connected) claudePairings.delete(browserToken);
+  }
+}
+
+function createClaudePairing() {
+  cleanExpiredPairings();
+  let pairingCode;
+  do pairingCode = createPairingCode();
+  while ([...claudePairings.values()].some((pairing) => pairing.pairingCode === pairingCode));
+
+  const browserToken = crypto.randomBytes(24).toString('base64url');
+  const expiresAtMs = Date.now() + PAIRING_TTL_MS;
+  claudePairings.set(browserToken, {
+    pairingCode,
+    browserToken,
+    expiresAtMs,
+    connected: false,
+    connectedAt: null,
+  });
+  return { pairingCode, browserToken, expiresAt: new Date(expiresAtMs).toISOString() };
+}
+
+function connectClaude(pairingCode) {
+  cleanExpiredPairings();
+  const normalized = String(pairingCode || '').replace(/[^A-Z0-9]/gi, '').toUpperCase();
+  const pairing = [...claudePairings.values()].find((item) => item.pairingCode === normalized);
+  if (!pairing || pairing.expiresAtMs <= Date.now()) return null;
+
+  if (!pairing.connected) {
+    pairing.connected = true;
+    pairing.connectedAt = new Date().toISOString();
+    addActivity({ type: 'connection', tool: 'connect_fluid', message: 'Claude Code connected to Fluid' });
+  }
+  return { connected: true, connectedAt: pairing.connectedAt, project: project.name };
+}
+
+function getClaudePairingStatus(browserToken) {
+  cleanExpiredPairings();
+  const pairing = claudePairings.get(String(browserToken || ''));
+  if (!pairing) return null;
+  return {
+    connected: pairing.connected,
+    connectedAt: pairing.connectedAt,
+    expiresAt: new Date(pairing.expiresAtMs).toISOString(),
+  };
+}
 
 function getProject() {
   return project;
@@ -49,4 +108,13 @@ function getActivity() {
   return activity;
 }
 
-module.exports = { bus, getProject, setRequirements, addActivity, getActivity };
+module.exports = {
+  bus,
+  getProject,
+  setRequirements,
+  addActivity,
+  getActivity,
+  createClaudePairing,
+  connectClaude,
+  getClaudePairingStatus,
+};

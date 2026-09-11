@@ -5,42 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Fluid</title>
 <style>
-  :root { color-scheme:dark; --bg:#0b1020; --panel:#151d30; --line:#293550; --text:#edf2ff; --muted:#9ba8c7; --accent:#6385ff; --good:#43d787; --bad:#ff7070; font-family:Inter,-apple-system,"Segoe UI",sans-serif; }
-  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text)}
+  :root{color-scheme:dark;--bg:#0b1020;--panel:#151d30;--card:#0d1426;--line:#293550;--text:#edf2ff;--muted:#9ba8c7;--accent:#6385ff;--good:#43d787;--bad:#ff7070;font-family:Inter,-apple-system,"Segoe UI",sans-serif}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}
   header{padding:20px 28px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:14px}.brand{font-size:23px;font-weight:750}.brand span{font-weight:400;color:var(--muted)}.subtitle{font-size:13px;color:var(--muted)}
   main{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1200px;margin:auto;padding:24px 28px 60px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
-  h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:26px 0 12px}h2:first-child{margin-top:0}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:26px 0 12px}h2:first-child{margin-top:0}h3{margin:0;font-size:18px}
   textarea{width:100%;resize:vertical;background:#090f1e;border:1px solid var(--line);border-radius:8px;color:var(--text);padding:11px;font:13px/1.5 ui-monospace,Consolas,monospace}
-  button,a.button{display:inline-flex;align-items:center;justify-content:center;background:#202c48;border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:8px;font-weight:650;font-size:13px;text-decoration:none;cursor:pointer}button:hover,a.button:hover{border-color:var(--accent)}button.primary,a.primary{background:var(--accent);border-color:var(--accent);color:white}button:disabled{opacity:.45;cursor:not-allowed}
-  .connect-card{padding:18px;border:1px solid var(--line);border-radius:10px;background:#0d1426}.connect-title{display:flex;justify-content:space-between;gap:12px;align-items:center}.connect-title strong{font-size:17px}.status{font-size:11px;font-weight:750;padding:4px 9px;border-radius:999px;background:rgba(255,112,112,.14);color:var(--bad)}.status.online{background:rgba(67,215,135,.14);color:var(--good)}
-  .muted,.notice{color:var(--muted);font-size:12px;line-height:1.5}.notice{border-left:3px solid var(--accent);background:rgba(99,133,255,.08);padding:9px 12px;border-radius:4px;margin-top:14px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.device-details{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;line-height:1.8}.agent-ok{color:var(--good)}.agent-bad{color:var(--bad)}
-  .activity{height:390px;overflow:auto;background:#090f1e;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:12px/1.45 ui-monospace,Consolas,monospace}.event{display:grid;grid-template-columns:70px 1fr;gap:8px;padding:3px 0}.time{color:var(--muted)}.error{color:var(--bad)}
-  .hidden{display:none!important}.toast{margin-top:10px;color:var(--muted);font-size:12px}.toast.error{color:var(--bad)}
+  button{display:inline-flex;align-items:center;justify-content:center;background:#202c48;border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:8px;font-weight:650;font-size:13px;cursor:pointer}button:hover{border-color:var(--accent)}button.primary{background:var(--accent);border-color:var(--accent);color:white}button:disabled{opacity:.45;cursor:not-allowed}
+  .connect-card{padding:18px;border:1px solid var(--line);border-radius:10px;background:var(--card)}.connect-title{display:flex;justify-content:space-between;gap:12px;align-items:center}.status{font-size:11px;font-weight:750;padding:4px 9px;border-radius:999px;background:rgba(255,112,112,.14);color:var(--bad)}.status.pending{background:rgba(99,133,255,.14);color:#aebeff}.status.online{background:rgba(67,215,135,.14);color:var(--good)}
+  .muted,.notice,.toast{color:var(--muted);font-size:12px;line-height:1.55}.notice{border-left:3px solid var(--accent);background:rgba(99,133,255,.08);padding:10px 12px;border-radius:4px;margin-top:14px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.pairing{font:700 22px/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;color:white;margin:10px 0}
+  .activity{height:505px;overflow:auto;background:#090f1e;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:12px/1.45 ui-monospace,Consolas,monospace}.event{display:grid;grid-template-columns:70px 1fr;gap:8px;padding:3px 0}.time{color:var(--muted)}.error{color:var(--bad)}.hidden{display:none!important}.toast{margin-top:10px}.toast.error{color:var(--bad)}
+  dialog{max-width:520px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:22px}dialog::backdrop{background:rgba(0,0,0,.7)}dialog ol{color:var(--muted);font-size:13px;line-height:1.6;padding-left:20px}
   @media(max-width:850px){main{grid-template-columns:1fr;padding:18px}header{padding:18px;display:block}.subtitle{margin-top:5px}}
 </style>
 </head>
 <body>
-<header><div class="brand">Fluid <span>Agent POC</span></div><div class="subtitle">Build locally with Claude Code, controlled from the web</div></header>
+<header><div class="brand">Fluid <span>Agent POC</span></div><div class="subtitle">Build with your Claude Code, from the web</div></header>
 <main>
   <section class="panel">
-    <h2>Connect this computer</h2>
+    <h2>Connect Claude Code</h2>
     <div class="connect-card">
-      <div class="connect-title"><strong id="deviceName">Fluid Connector</strong><span id="deviceStatus" class="status">Not connected</span></div>
-      <p class="muted">Install the Fluid Connector once. It runs Claude Code on this computer using your existing login; Fluid never receives your Claude credentials.</p>
+      <div class="connect-title"><h3>Claude Code</h3><span id="status" class="status">Not connected</span></div>
+      <p class="muted">Fluid opens Claude Code with a connection request. There is no Fluid installer and Fluid never receives your Claude credentials.</p>
       <div class="actions">
-        <a id="downloadBtn" class="button primary" href="#">Download &amp; Connect</a>
-        <button id="loginClaudeBtn" class="hidden">Sign in to Claude Code</button>
-        <button id="selectWorkspaceBtn" class="hidden">Select workspace</button>
+        <button id="connectBtn" class="primary">Connect Claude Code</button>
+        <button id="copyBtn" class="hidden">Copy connection request</button>
       </div>
-      <div id="installHelp" class="notice hidden">Open the downloaded installer and approve the Windows prompt. The connector starts automatically and returns you here—no terminal commands are required.</div>
-      <div id="deviceDetails" class="device-details hidden"></div>
-      <div id="connectorMessage" class="toast"></div>
+      <div id="pairingPanel" class="notice hidden">
+        Pairing code
+        <div id="pairingCode" class="pairing"></div>
+        Claude Code will ask you to review the request and approve Fluid access. Press Enter there to continue.
+      </div>
+      <div id="connectionMessage" class="toast"></div>
     </div>
 
     <div id="buildSection" class="hidden">
-      <h2>Build with your agent</h2>
-      <textarea id="buildPrompt" rows="8" placeholder="Describe what you want Claude Code to build..."></textarea>
-      <div class="actions"><button id="runBtn" class="primary">Run Claude Code</button></div>
+      <h2>Build in Claude Code</h2>
+      <textarea id="buildPrompt" rows="5">Fetch the current Fluid project requirements and build them in this workspace. Report meaningful progress to Fluid as you work.</textarea>
+      <div class="actions"><button id="buildBtn" class="primary">Open build in Claude Code</button></div>
+      <div class="notice">Open the project folder you want to change in VS Code before starting the build. Claude Code remains in control of all file and command approvals.</div>
     </div>
 
     <h2>Project requirements</h2>
@@ -50,152 +53,154 @@
   </section>
 
   <section class="panel">
-    <h2>Agent activity</h2>
-    <div id="deviceActivity" class="activity"><span class="muted">Connect a computer to see local agent activity.</span></div>
-    <h2>Fluid MCP activity</h2>
-    <div id="mcpActivity" class="activity"><span class="muted">No MCP activity reported yet.</span></div>
+    <h2>Claude activity</h2>
+    <div id="activity" class="activity"><span class="muted">Connect Claude Code to see activity.</span></div>
   </section>
 </main>
+
+<dialog id="helpDialog">
+  <h3>Finish in Claude Code</h3>
+  <ol>
+    <li>Claude Code opens with Fluid's connection request already filled in.</li>
+    <li>Press Enter and review the request.</li>
+    <li>On the first connection, approve adding the Fluid plugin and complete the browser authorization if Claude asks.</li>
+    <li>This page changes to <strong>Connected</strong> when Claude confirms the pairing code.</li>
+  </ol>
+  <p class="muted">If Claude Code did not open, use <strong>Copy connection request</strong> and paste it into Claude Code. No terminal command is required.</p>
+  <div class="actions"><button id="closeHelp" class="primary">Got it</button></div>
+</dialog>
+
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-  let deviceId = localStorage.getItem('fluidDeviceId');
-  let deviceToken = localStorage.getItem('fluidDeviceToken');
+  const marketplace = 'rumman-acc/fluid-code-poc';
+  let browserToken = localStorage.getItem('fluidClaudePairingToken');
+  let pairingCode = localStorage.getItem('fluidClaudePairingCode');
+  let connectionRequest = '';
+  let pollTimer;
 
-  function headers(json = false) {
-    const value = deviceToken ? { 'x-fluid-device-token': deviceToken } : {};
-    if (json) value['Content-Type'] = 'application/json';
-    return value;
-  }
-  function eventHtml(entry) {
-    const time = new Date(entry.ts).toLocaleTimeString([], { hour12:false });
-    const message = String(entry.message || '').replace(/[&<>]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-    return `<div class="event"><span class="time">${time}</span><span class="${entry.type === 'error' ? 'error' : ''}">${message}</span></div>`;
-  }
-  function escapeHtml(value) {
-    return String(value || '').replace(/[&<>"']/g, (character) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[character]));
-  }
-  function resetConnection() {
-    deviceId = null;
-    deviceToken = null;
-    localStorage.removeItem('fluidDeviceId');
-    localStorage.removeItem('fluidDeviceToken');
-    $('deviceName').textContent = 'Fluid Connector';
-    $('deviceStatus').textContent = 'Not connected';
-    $('deviceStatus').className = 'status';
-    $('downloadBtn').classList.remove('hidden');
-    $('loginClaudeBtn').classList.add('hidden');
-    $('selectWorkspaceBtn').classList.add('hidden');
-    $('buildSection').classList.add('hidden');
+  function openClaude(prompt) {
+    location.href = `vscode://anthropic.claude-code/open?prompt=${encodeURIComponent(prompt)}`;
   }
 
-  async function initialize() {
-    const [projectResponse, configResponse] = await Promise.all([fetch('/api/project'), fetch('/api/connector/config')]);
-    const projectData = await projectResponse.json();
-    const config = await configResponse.json();
-    $('requirements').value = projectData.project.requirements;
-    $('buildPrompt').value = 'Fetch the Fluid project requirements and build the application in the selected workspace. Report meaningful progress as you work.';
-    $('downloadBtn').href = config.downloadUrl;
-
-    const pair = new URLSearchParams(location.search).get('pair');
-    if (pair) await claimDevice(pair);
-    if (deviceId && deviceToken) {
-      await refreshDevice();
-      setInterval(refreshDevice, 2000);
-    }
-    connectMcpStream();
+  function makeConnectionRequest(code) {
+    return `Connect this Claude Code session to the Fluid platform. My one-time Fluid pairing code is ${code}. If the Fluid tools are already available, call connect_fluid with that code. If they are not available, help me add the Claude plugin marketplace ${marketplace} in Claude's plugin manager, install the Fluid plugin, and then connect. Let Claude handle Fluid's browser authorization and ask me to approve it; never ask me for credentials.`;
   }
 
-  async function claimDevice(pairingCode) {
-    $('connectorMessage').textContent = 'Pairing this computer...';
-    const response = await fetch('/api/connector/claim', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ pairingCode }) });
-    const data = await response.json();
-    if (!response.ok) {
-      $('connectorMessage').textContent = data.error;
-      $('connectorMessage').className = 'toast error';
+  function setConnected(connectedAt) {
+    clearInterval(pollTimer);
+    $('status').textContent = 'Claude Code connected';
+    $('status').className = 'status online';
+    $('connectBtn').textContent = 'Reconnect Claude Code';
+    $('pairingPanel').classList.add('hidden');
+    $('copyBtn').classList.add('hidden');
+    $('buildSection').classList.remove('hidden');
+    $('connectionMessage').textContent = connectedAt ? `Connected ${new Date(connectedAt).toLocaleString()}.` : 'Connected.';
+  }
+
+  async function checkPairing() {
+    if (!browserToken) return;
+    const response = await fetch(`/api/claude/pairings/${encodeURIComponent(browserToken)}`);
+    if (response.status === 404) {
+      clearInterval(pollTimer);
+      localStorage.removeItem('fluidClaudePairingToken');
+      localStorage.removeItem('fluidClaudePairingCode');
+      browserToken = null;
+      pairingCode = null;
+      $('status').textContent = 'Not connected';
+      $('status').className = 'status';
+      $('pairingPanel').classList.add('hidden');
+      $('copyBtn').classList.add('hidden');
       return;
     }
-    deviceId = data.deviceId;
-    deviceToken = data.controlToken;
-    localStorage.setItem('fluidDeviceId', deviceId);
-    localStorage.setItem('fluidDeviceToken', deviceToken);
-    history.replaceState({}, '', location.pathname);
-    $('connectorMessage').textContent = 'Computer paired successfully.';
+    const data = await response.json();
+    if (data.connected) setConnected(data.connectedAt);
   }
 
-  async function refreshDevice() {
+  async function connect() {
+    $('connectBtn').disabled = true;
+    $('connectionMessage').textContent = 'Creating a secure one-time pairing request...';
     try {
-      const response = await fetch(`/api/connector/devices/${encodeURIComponent(deviceId)}`, { headers:headers() });
-      if (response.status === 401) {
-        resetConnection();
-        return;
-      }
+      const response = await fetch('/api/claude/pairings', { method: 'POST' });
+      if (!response.ok) throw new Error('Could not create a pairing request.');
       const data = await response.json();
-      const device = data.device;
-      $('deviceName').textContent = device.name;
-      $('deviceStatus').textContent = device.online ? 'Connected' : 'Offline';
-      $('deviceStatus').className = `status ${device.online ? 'online' : ''}`;
-      $('downloadBtn').classList.add('hidden');
-      $('selectWorkspaceBtn').classList.remove('hidden');
-      $('selectWorkspaceBtn').disabled = !device.online || device.busy;
-      $('buildSection').classList.remove('hidden');
-      const claude = device.agents?.claude || {};
-      const claudeReady = claude.available && claude.authenticated;
-      $('loginClaudeBtn').classList.toggle('hidden', !claude.available || claude.authenticated);
-      $('loginClaudeBtn').disabled = !device.online;
-      $('runBtn').disabled = !device.online || !device.workspace || device.busy || !claude.available || !claude.authenticated;
-      $('deviceDetails').classList.remove('hidden');
-      const agentLabel = claude.available
-        ? `${claude.authenticated ? 'Ready' : 'Sign-in required'} (${escapeHtml(claude.version || 'detected')})`
-        : 'Not found';
-      $('deviceDetails').innerHTML = `Claude Code: <strong class="${claudeReady ? 'agent-ok' : 'agent-bad'}">${agentLabel}</strong><br>Workspace: <strong>${escapeHtml(device.workspace || 'Not selected')}</strong>`;
-      $('deviceActivity').innerHTML = data.activity.length ? data.activity.map(eventHtml).join('') : '<span class="muted">Connected. No agent activity yet.</span>';
-      $('deviceActivity').scrollTop = $('deviceActivity').scrollHeight;
-    } catch {
-      $('deviceStatus').textContent = 'Reconnecting';
+      browserToken = data.browserToken;
+      pairingCode = data.pairingCode;
+      connectionRequest = makeConnectionRequest(pairingCode);
+      localStorage.setItem('fluidClaudePairingToken', browserToken);
+      localStorage.setItem('fluidClaudePairingCode', pairingCode);
+      $('pairingCode').textContent = pairingCode;
+      $('pairingPanel').classList.remove('hidden');
+      $('copyBtn').classList.remove('hidden');
+      $('status').textContent = 'Waiting for Claude';
+      $('status').className = 'status pending';
+      $('connectionMessage').textContent = 'Complete the approval in Claude Code.';
+      $('helpDialog').showModal();
+      openClaude(connectionRequest);
+      clearInterval(pollTimer);
+      pollTimer = setInterval(() => checkPairing().catch(() => {}), 2000);
+    } catch (error) {
+      $('connectionMessage').textContent = error.message;
+      $('connectionMessage').className = 'toast error';
+    } finally {
+      $('connectBtn').disabled = false;
     }
   }
 
-  async function command(action, extra = {}) {
-    const body = JSON.stringify({ action, ...extra });
-    const response = await fetch(`/api/connector/devices/${encodeURIComponent(deviceId)}/commands`, { method:'POST', headers:headers(true), body });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Command failed');
-  }
-
-  $('downloadBtn').addEventListener('click', () => $('installHelp').classList.remove('hidden'));
-  $('loginClaudeBtn').addEventListener('click', async () => {
-    try { await command('login_claude'); $('connectorMessage').textContent = 'Complete Claude sign-in in the browser window.'; }
-    catch (error) { $('connectorMessage').textContent = error.message; }
+  $('connectBtn').addEventListener('click', connect);
+  $('closeHelp').addEventListener('click', () => $('helpDialog').close());
+  $('copyBtn').addEventListener('click', async () => {
+    connectionRequest = connectionRequest || makeConnectionRequest(pairingCode);
+    await navigator.clipboard.writeText(connectionRequest);
+    $('connectionMessage').textContent = 'Connection request copied. Paste it into Claude Code and press Enter.';
   });
-  $('selectWorkspaceBtn').addEventListener('click', async () => {
-    try {
-      await command('select_workspace');
-      $('connectorMessage').textContent = 'Choose a folder in the window opened by Fluid Connector.';
-    } catch (error) { $('connectorMessage').textContent = error.message; }
-  });
-  $('runBtn').addEventListener('click', async () => {
-    try {
-      await command('run', { agentId:'claude', prompt:$('buildPrompt').value });
-      $('connectorMessage').textContent = 'Claude Code started.';
-      await refreshDevice();
-    } catch (error) { $('connectorMessage').textContent = error.message; }
-  });
+  $('buildBtn').addEventListener('click', () => openClaude($('buildPrompt').value));
   $('saveReq').addEventListener('click', async () => {
-    const response = await fetch('/api/project/requirements', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ requirements:$('requirements').value }) });
+    const response = await fetch('/api/project/requirements', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requirements: $('requirements').value }),
+    });
     $('saveStatus').textContent = response.ok ? 'Saved.' : 'Could not save requirements.';
   });
 
-  function connectMcpStream() {
+  function eventHtml(entry) {
+    const time = new Date(entry.ts).toLocaleTimeString([], { hour12: false });
+    const message = String(entry.message || '').replace(/[&<>]/g, (character) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[character]));
+    return `<div class="event"><span class="time">${time}</span><span class="${entry.type === 'error' ? 'error' : ''}">${message}</span></div>`;
+  }
+
+  function connectActivityStream() {
     const source = new EventSource('/api/activity/stream');
     source.onmessage = (event) => {
-      const log = $('mcpActivity');
+      const log = $('activity');
       if (log.querySelector('.muted')) log.innerHTML = '';
       log.insertAdjacentHTML('beforeend', eventHtml(JSON.parse(event.data)));
       log.scrollTop = log.scrollHeight;
     };
   }
-  initialize().catch((error) => { $('connectorMessage').textContent = error.message; });
+
+  async function initialize() {
+    const response = await fetch('/api/project');
+    const data = await response.json();
+    $('requirements').value = data.project.requirements;
+    connectActivityStream();
+    if (browserToken && pairingCode) {
+      connectionRequest = makeConnectionRequest(pairingCode);
+      $('pairingCode').textContent = pairingCode;
+      $('pairingPanel').classList.remove('hidden');
+      $('copyBtn').classList.remove('hidden');
+      $('status').textContent = 'Waiting for Claude';
+      $('status').className = 'status pending';
+      await checkPairing();
+      if (browserToken) pollTimer = setInterval(() => checkPairing().catch(() => {}), 2000);
+    }
+  }
+
+  initialize().catch((error) => {
+    $('connectionMessage').textContent = error.message;
+    $('connectionMessage').className = 'toast error';
+  });
 })();
 </script>
 </body>

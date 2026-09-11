@@ -14,6 +14,30 @@ function createFluidMcpServer() {
   const server = new McpServer({ name: 'fluid', version: '0.1.0' });
 
   server.registerTool(
+    'connect_fluid',
+    {
+      title: 'Connect Claude Code to Fluid',
+      description:
+        'Pair this Claude Code session with the Fluid browser session using the one-time code shown by Fluid.',
+      inputSchema: {
+        pairing_code: z.string().describe('The one-time pairing code shown in the Fluid website'),
+      },
+    },
+    async ({ pairing_code }) => {
+      const result = store.connectClaude(pairing_code);
+      if (!result) {
+        return {
+          isError: true,
+          content: [{ type: 'text', text: 'That Fluid pairing code is invalid or expired. Create a new connection from the Fluid website.' }],
+        };
+      }
+      return {
+        content: [{ type: 'text', text: `Claude Code is connected to Fluid for project "${result.project}".` }],
+      };
+    }
+  );
+
+  server.registerTool(
     'get_project_requirements',
     {
       title: 'Get Fluid project requirements',
