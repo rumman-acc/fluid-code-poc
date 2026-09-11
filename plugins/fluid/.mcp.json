@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "fluid": {
-      "type": "http",
-      "url": "https://fluid-code-poc.onrender.com/mcp"
-    }
-  }
-}

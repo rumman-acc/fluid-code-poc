@@ -26,9 +26,10 @@
     <h2>Connect Claude Code</h2>
     <div class="connect-card">
       <div class="connect-title"><h3>Claude Code</h3><span id="status" class="status">Not connected</span></div>
-      <p class="muted">Fluid opens Claude Code with a connection request. There is no Fluid installer and Fluid never receives your Claude credentials.</p>
+      <p class="muted">Fluid opens Claude Code in your browser with a connection request. Nothing is installed on your computer and Fluid never receives your Claude credentials.</p>
       <div class="actions">
-        <button id="connectBtn" class="primary">Connect Claude Code</button>
+        <button id="connectBtn" class="primary">Connect Claude in browser</button>
+        <button id="setupConnectorBtn">Set up Fluid connector</button>
         <button id="copyBtn" class="hidden">Copy connection request</button>
       </div>
       <div id="pairingPanel" class="notice hidden">
@@ -41,9 +42,9 @@
 
     <div id="buildSection" class="hidden">
       <h2>Build in Claude Code</h2>
-      <textarea id="buildPrompt" rows="5">Fetch the current Fluid project requirements and build them in this workspace. Report meaningful progress to Fluid as you work.</textarea>
-      <div class="actions"><button id="buildBtn" class="primary">Open build in Claude Code</button></div>
-      <div class="notice">Choose the project folder and Local environment in Claude Desktop before starting the build. Claude Code remains in control of all file and command approvals.</div>
+      <textarea id="buildPrompt" rows="5">Use the Fluid connector to fetch the current project requirements, build them in the selected GitHub repository, and report meaningful progress to Fluid as you work.</textarea>
+      <div class="actions"><button id="buildBtn" class="primary">Open build in Claude browser</button></div>
+      <div class="notice">Choose the GitHub repository and branch in Claude Code. Claude runs the task in its cloud environment and returns a branch for review.</div>
     </div>
 
     <h2>Project requirements</h2>
@@ -61,37 +62,39 @@
 <dialog id="helpDialog">
   <h3>Finish in Claude Code</h3>
   <ol>
-    <li>The Code tab in Claude Desktop opens with Fluid's connection request already filled in.</li>
-    <li>Press Enter and review the request.</li>
-    <li>On the first connection, approve adding the Fluid plugin and complete the browser authorization if Claude asks.</li>
+    <li>Claude Code opens in a new browser tab with Fluid's connection request already filled in.</li>
+    <li>On the first connection, add Fluid as a custom connector using <strong>https://fluid-code-poc.onrender.com/mcp</strong> and complete its browser authorization.</li>
+    <li>Enable the Fluid connector for the conversation, then submit the prepared request.</li>
     <li>This page changes to <strong>Connected</strong> when Claude confirms the pairing code.</li>
   </ol>
-  <p class="muted">If Claude Desktop did not open, install or update the official Claude app, then try again. You can also use <strong>Copy connection request</strong> and paste it into its Code tab. No terminal or VS Code is required.</p>
+  <p class="muted">No desktop application, VS Code, terminal, or Fluid installer is required.</p>
   <div class="actions"><button id="closeHelp" class="primary">Got it</button></div>
 </dialog>
 
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-  const marketplace = 'rumman-acc/fluid-code-poc';
+  const mcpUrl = 'https://fluid-code-poc.onrender.com/mcp';
   let browserToken = localStorage.getItem('fluidClaudePairingToken');
   let pairingCode = localStorage.getItem('fluidClaudePairingCode');
   let connectionRequest = '';
   let pollTimer;
 
-  function openClaude(prompt) {
-    location.href = `claude://code/new?q=${encodeURIComponent(prompt)}`;
+  function openClaude(prompt, targetWindow = null) {
+    const url = `https://claude.ai/code?prompt=${encodeURIComponent(prompt)}`;
+    if (targetWindow) targetWindow.location.href = url;
+    else window.open(url, '_blank', 'noopener');
   }
 
   function makeConnectionRequest(code) {
-    return `Connect this Claude Code session to the Fluid platform. My one-time Fluid pairing code is ${code}. If the Fluid tools are already available, call connect_fluid with that code. If they are not available, help me add the Claude plugin marketplace ${marketplace} in Claude's plugin manager, install the Fluid plugin, and then connect. Let Claude handle Fluid's browser authorization and ask me to approve it; never ask me for credentials.`;
+    return `Connect this Claude Code browser session to the Fluid platform. My one-time Fluid pairing code is ${code}. Use the Fluid custom connector and call connect_fluid with that code. If the connector is not enabled, ask me to enable it for this conversation. The Fluid remote MCP URL is ${mcpUrl}. Never ask me for credentials.`;
   }
 
   function setConnected(connectedAt) {
     clearInterval(pollTimer);
     $('status').textContent = 'Claude Code connected';
     $('status').className = 'status online';
-    $('connectBtn').textContent = 'Reconnect Claude Code';
+    $('connectBtn').textContent = 'Reconnect Claude in browser';
     $('pairingPanel').classList.add('hidden');
     $('copyBtn').classList.add('hidden');
     $('buildSection').classList.remove('hidden');
@@ -118,6 +121,7 @@
   }
 
   async function connect() {
+    const claudeTab = window.open('about:blank', '_blank');
     $('connectBtn').disabled = true;
     $('connectionMessage').textContent = 'Creating a secure one-time pairing request...';
     try {
@@ -136,10 +140,11 @@
       $('status').className = 'status pending';
       $('connectionMessage').textContent = 'Complete the approval in Claude Code.';
       $('helpDialog').showModal();
-      openClaude(connectionRequest);
+      openClaude(connectionRequest, claudeTab);
       clearInterval(pollTimer);
       pollTimer = setInterval(() => checkPairing().catch(() => {}), 2000);
     } catch (error) {
+      if (claudeTab) claudeTab.close();
       $('connectionMessage').textContent = error.message;
       $('connectionMessage').className = 'toast error';
     } finally {
@@ -148,6 +153,11 @@
   }
 
   $('connectBtn').addEventListener('click', connect);
+  $('setupConnectorBtn').addEventListener('click', async () => {
+    window.open('https://claude.ai/customize/connectors', '_blank', 'noopener');
+    await navigator.clipboard.writeText(mcpUrl).catch(() => {});
+    $('connectionMessage').textContent = 'Fluid MCP URL copied. In Claude, choose Add custom connector, name it Fluid, and paste the URL.';
+  });
   $('closeHelp').addEventListener('click', () => $('helpDialog').close());
   $('copyBtn').addEventListener('click', async () => {
     connectionRequest = connectionRequest || makeConnectionRequest(pairingCode);

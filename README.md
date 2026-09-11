@@ -31,16 +31,13 @@ Open **http://localhost:4787** in a browser.
 ## Hosted Claude-native POC
 
 The customer-facing dashboard is hosted from `mcp-server/` on Render. It does
-not download a Fluid executable or show terminal commands. **Connect Claude
-Code** creates a 15-minute pairing code and opens the Code tab in the official
-Claude Desktop app with a connection request already filled in. The user
-reviews and submits that request inside Claude Code. VS Code is not required.
+not download an executable or show terminal commands. **Connect Claude in
+browser** creates a 15-minute pairing code and opens `claude.ai/code` with the
+connection request already filled in.
 
-The repository is also a Claude plugin marketplace. Its `fluid` plugin bundles
-the hosted OAuth-protected MCP server and two skills: connect to Fluid, and
-build the current Fluid project. On the first connection, the user approves
-adding/installing that plugin in Claude's graphical plugin manager and completes
-Fluid authorization in the browser. Later connections go directly to pairing.
+Fluid is added once as a Claude custom connector using the hosted
+OAuth-protected MCP endpoint. The user authorizes it in Claude's browser UI and
+enables it for the conversation. Later connections go directly to pairing.
 
 Set this variable on the Render web service:
 
@@ -49,8 +46,10 @@ FLUID_BASE_URL=https://fluid-code-poc.onrender.com
 ```
 
 The hosted flow is intentionally client-initiated: a website cannot silently
-install a Claude plugin, submit a Claude prompt, or choose a local workspace.
-Those actions remain visible user approvals inside Claude Desktop.
+add a Claude connector, submit a Claude prompt, or grant repository access.
+Those actions remain visible user approvals inside Claude's browser UI. Claude
+Code on the web works with GitHub repositories in an Anthropic-hosted cloud
+environment; it does not edit arbitrary folders on the user's computer.
 
 ## How agent invocation actually works on this machine
 
