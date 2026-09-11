@@ -32,9 +32,9 @@ Open **http://localhost:4787** in a browser.
 
 The customer-facing dashboard is hosted from `mcp-server/` on Render. It does
 not download a Fluid executable or show terminal commands. **Connect Claude
-Code** creates a 15-minute pairing code and opens the official Claude Code VS
-Code deep link with a connection request already filled in. The user reviews
-and submits that request inside Claude Code.
+Code** creates a 15-minute pairing code and opens the Code tab in the official
+Claude Desktop app with a connection request already filled in. The user
+reviews and submits that request inside Claude Code. VS Code is not required.
 
 The repository is also a Claude plugin marketplace. Its `fluid` plugin bundles
 the hosted OAuth-protected MCP server and two skills: connect to Fluid, and
@@ -50,7 +50,7 @@ FLUID_BASE_URL=https://fluid-code-poc.onrender.com
 
 The hosted flow is intentionally client-initiated: a website cannot silently
 install a Claude plugin, submit a Claude prompt, or choose a local workspace.
-Those actions remain visible user approvals inside Claude Code/VS Code.
+Those actions remain visible user approvals inside Claude Desktop.
 
 ## How agent invocation actually works on this machine
 

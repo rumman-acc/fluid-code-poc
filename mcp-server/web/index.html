@@ -43,7 +43,7 @@
       <h2>Build in Claude Code</h2>
       <textarea id="buildPrompt" rows="5">Fetch the current Fluid project requirements and build them in this workspace. Report meaningful progress to Fluid as you work.</textarea>
       <div class="actions"><button id="buildBtn" class="primary">Open build in Claude Code</button></div>
-      <div class="notice">Open the project folder you want to change in VS Code before starting the build. Claude Code remains in control of all file and command approvals.</div>
+      <div class="notice">Choose the project folder and Local environment in Claude Desktop before starting the build. Claude Code remains in control of all file and command approvals.</div>
     </div>
 
     <h2>Project requirements</h2>
@@ -61,12 +61,12 @@
 <dialog id="helpDialog">
   <h3>Finish in Claude Code</h3>
   <ol>
-    <li>Claude Code opens with Fluid's connection request already filled in.</li>
+    <li>The Code tab in Claude Desktop opens with Fluid's connection request already filled in.</li>
     <li>Press Enter and review the request.</li>
     <li>On the first connection, approve adding the Fluid plugin and complete the browser authorization if Claude asks.</li>
     <li>This page changes to <strong>Connected</strong> when Claude confirms the pairing code.</li>
   </ol>
-  <p class="muted">If Claude Code did not open, use <strong>Copy connection request</strong> and paste it into Claude Code. No terminal command is required.</p>
+  <p class="muted">If Claude Desktop did not open, install or update the official Claude app, then try again. You can also use <strong>Copy connection request</strong> and paste it into its Code tab. No terminal or VS Code is required.</p>
   <div class="actions"><button id="closeHelp" class="primary">Got it</button></div>
 </dialog>
 
@@ -80,7 +80,7 @@
   let pollTimer;
 
   function openClaude(prompt) {
-    location.href = `vscode://anthropic.claude-code/open?prompt=${encodeURIComponent(prompt)}`;
+    location.href = `claude://code/new?q=${encodeURIComponent(prompt)}`;
   }
 
   function makeConnectionRequest(code) {
