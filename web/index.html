@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fluid Agent POC</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Fluid <span>Agent POC</span></div>
+    <div class="subtitle">Enterprise control plane for local coding agents</div>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <h2>Project</h2>
+      <label class="field">
+        <span>Project name</span>
+        <input id="projectName" type="text" value="My Test Application" />
+      </label>
+
+      <label class="field">
+        <span>Local workspace</span>
+        <input id="workspacePath" type="text" readonly />
+      </label>
+
+      <h2>Coding Agent</h2>
+      <div id="agentChoices" class="agent-choices">
+        <div class="agent-loading">Detecting locally installed agents&hellip;</div>
+      </div>
+      <p class="notice">
+        Agent runs locally on this computer.<br />
+        Fluid provides the project/control interface.
+      </p>
+
+      <h2>Connect Claude Code to Fluid</h2>
+      <p class="notice">
+        Separate from picking an agent above: this links <em>this machine's</em>
+        Claude Code to the Fluid MCP Server (project requirements + activity
+        reporting), via its own OAuth handshake. Your Claude subscription is
+        never shared with Fluid &mdash; only an MCP session token is.
+      </p>
+      <div id="connectClaudeStatus" class="agent-option" style="margin-top:10px;">
+        <div class="meta">
+          <div class="name">Fluid MCP connection</div>
+          <div class="detail" id="connectClaudeDetail">Checking status&hellip;</div>
+        </div>
+        <span class="badge" id="connectClaudeBadge">&hellip;</span>
+      </div>
+      <button id="connectClaudeBtn" type="button" style="margin-top:10px;">Connect Claude Code</button>
+
+      <h2>Prompt</h2>
+      <label class="field">
+        <span>What should the agent build?</span>
+        <textarea id="prompt" rows="12"></textarea>
+      </label>
+
+      <button id="startBtn" class="primary" type="button">Start Agent</button>
+      <div id="startError" class="error" hidden></div>
+    </section>
+
+    <section class="panel">
+      <h2>Agent Activity</h2>
+      <div id="activityLog" class="activity-log">
+        <div class="activity-empty">No agent run yet.</div>
+      </div>
+
+      <h2>Generated Application</h2>
+      <ul id="fileList" class="file-list">
+        <li class="file-empty">No files generated yet.</li>
+      </ul>
+      <div class="row-buttons">
+        <button id="openWorkspaceBtn" type="button">Open Workspace</button>
+        <button id="runAppBtn" type="button" disabled>Run Application</button>
+      </div>
+    </section>
+
+    <section class="panel architecture">
+      <h2>Architecture</h2>
+      <pre class="diagram">┌───────────────┐
+│   Fluid UI    │
+└───────┬───────┘
+        │ localhost
+        ▼
+┌────────────────────┐
+│ Fluid Local Bridge  │
+└─────────┬───────────┘
+          │
+          ▼
+┌────────────────────┐
+│ Claude Code / Codex │
+└─────────┬───────────┘
+          │
+          ▼
+┌────────────────────┐
+│  Local Workspace    │
+└─────────┬───────────┘
+          │
+          ▼
+┌────────────────────┐
+│  Generated App      │
+└────────────────────┘</pre>
+      <p class="notice small">
+        <strong>Fluid is the control plane.</strong> The coding agent is the worker.
+        The filesystem is local. No API key ever reaches the browser.
+      </p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "fluid-agent-poc",
+  "version": "0.1.0",
+  "description": "Fluid Local Coding Agent POC - Fluid SaaS control plane driving a locally-authenticated coding agent (Claude Code / Codex) against a local workspace.",
+  "private": true,
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

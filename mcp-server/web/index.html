@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fluid Project Dashboard</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #0f1420; --panel: #161d2e; --border: #2a3348; --text: #e7ecf7;
+    --muted: #93a0bf; --accent: #7c9cff; --accent-strong: #5a7bff; --good: #4ade80;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); }
+  header { padding: 20px 28px; border-bottom: 1px solid var(--border); }
+  .brand { font-size: 22px; font-weight: 700; }
+  .brand span { font-weight: 400; color: var(--muted); }
+  .subtitle { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 24px 28px 60px; max-width: 1200px; margin: 0 auto; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 22px 0 10px; }
+  h2:first-child { margin-top: 0; }
+  textarea, input[type=text] { width: 100%; background: #0c1120; border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px 10px; font-size: 13px; font-family: ui-monospace, Consolas, monospace; }
+  textarea { resize: vertical; }
+  button { background: #1d2740; border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 7px; font-size: 13px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; font-weight: 600; }
+  .code-block { background: #0c1120; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; overflow-x: auto; white-space: pre; position: relative; margin-bottom: 10px; }
+  .code-block .copy { position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 3px 8px; }
+  .step { display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px; }
+  .step .n { color: var(--muted); font-size: 12px; width: 16px; flex-shrink: 0; }
+  .activity-log { background: #0c1120; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; height: 420px; overflow-y: auto; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+  .activity-empty { color: var(--muted); }
+  .activity-line { display: flex; gap: 8px; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .activity-line .time { color: var(--muted); flex-shrink: 0; }
+  .activity-line .tag { font-size: 10px; padding: 1px 6px; border-radius: 999px; background: rgba(124,156,255,0.15); color: var(--accent); flex-shrink: 0; height: fit-content; }
+  .activity-line .tag.report { background: rgba(74,222,128,0.15); color: var(--good); }
+  .notice { font-size: 12px; color: var(--muted); border-left: 3px solid var(--accent); padding: 8px 12px; background: rgba(124,156,255,0.08); border-radius: 4px; margin-top: 10px; }
+  .row { display: flex; gap: 10px; margin-top: 10px; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">Fluid <span>Project Dashboard</span></div>
+    <div class="subtitle" id="projectName">Loading&hellip;</div>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <h2>Project requirements</h2>
+      <textarea id="requirements" rows="14"></textarea>
+      <div class="row">
+        <button class="primary" id="saveReq" type="button">Save</button>
+        <span id="saveStatus" style="color: var(--muted); font-size: 12px; align-self:center;"></span>
+      </div>
+      <p class="notice">
+        This is what <code>get_project_requirements</code> returns to Claude Code &mdash;
+        edit it here and the agent picks up the change on its next call, no prompt-editing required.
+      </p>
+
+      <h2>Connect Claude Code</h2>
+      <div class="step"><span class="n">1</span><span>Add Fluid as a remote MCP server (one time):</span></div>
+      <div class="code-block"><button class="copy" data-copy-target="cmdAdd" type="button">Copy</button><span id="cmdAdd"></span></div>
+      <div class="step"><span class="n">2</span><span>Sign in (opens a browser to authorize Fluid &mdash; your Claude subscription itself never touches Fluid):</span></div>
+      <div class="code-block"><button class="copy" data-copy-target="cmdLogin" type="button">Copy</button><span id="cmdLogin"></span></div>
+      <div class="step"><span class="n">3</span><span>Build, from inside Claude Code:</span></div>
+      <div class="code-block"><button class="copy" data-copy-target="cmdPrompt" type="button">Copy</button><span id="cmdPrompt"></span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Agent Activity (via MCP)</h2>
+      <div id="activityLog" class="activity-log"><div class="activity-empty">No activity reported yet.</div></div>
+      <p class="notice">
+        This feed is populated only by MCP tool calls the agent itself makes
+        (<code>get_project_requirements</code>, <code>report_agent_activity</code>) &mdash;
+        it is Fluid's audit trail, independent of anything the local Fluid Agent Bridge shows.
+      </p>
+    </section>
+  </main>
+
+<script>
+(() => {
+  const el = (id) => document.getElementById(id);
+  let mcpUrl = '';
+
+  function fmtTime(iso) {
+    return new Date(iso).toLocaleTimeString('en-US', { hour12: false });
+  }
+
+  function appendActivity(entry) {
+    const log = el('activityLog');
+    if (log.querySelector('.activity-empty')) log.innerHTML = '';
+    const line = document.createElement('div');
+    line.className = 'activity-line';
+    const tagClass = entry.tool === 'report_agent_activity' ? 'tag report' : 'tag';
+    line.innerHTML = `<span class="time">${fmtTime(entry.ts)}</span><span class="${tagClass}"></span><span class="msg"></span>`;
+    line.querySelector('.tag').textContent = entry.tool || entry.type;
+    line.querySelector('.msg').textContent = entry.message;
+    log.appendChild(line);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  async function loadProject() {
+    const res = await fetch('/api/project');
+    const data = await res.json();
+    el('projectName').textContent = `Project: ${data.project.name}`;
+    el('requirements').value = data.project.requirements;
+    mcpUrl = data.mcpUrl;
+    el('cmdAdd').textContent = `claude mcp add --transport http fluid ${mcpUrl}`;
+    el('cmdLogin').textContent = `claude mcp login fluid`;
+    el('cmdPrompt').textContent = `Use the Fluid MCP tools: fetch the project requirements and build exactly that in this workspace, calling report_agent_activity as you make progress.`;
+  }
+
+  async function loadActivity() {
+    const res = await fetch('/api/activity');
+    const data = await res.json();
+    if (!data.activity.length) return;
+    el('activityLog').innerHTML = '';
+    data.activity.forEach(appendActivity);
+  }
+
+  function connectStream() {
+    const es = new EventSource('/api/activity/stream');
+    es.onmessage = (e) => appendActivity(JSON.parse(e.data));
+  }
+
+  el('saveReq').addEventListener('click', async () => {
+    const status = el('saveStatus');
+    status.textContent = 'Saving…';
+    const res = await fetch('/api/project/requirements', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requirements: el('requirements').value }),
+    });
+    status.textContent = res.ok ? 'Saved.' : 'Failed to save.';
+    setTimeout(() => (status.textContent = ''), 2000);
+  });
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.copy');
+    if (!btn) return;
+    const text = el(btn.dataset.copyTarget).textContent;
+    navigator.clipboard?.writeText(text);
+    btn.textContent = 'Copied';
+    setTimeout(() => (btn.textContent = 'Copy'), 1200);
+  });
+
+  loadProject();
+  loadActivity();
+  connectStream();
+})();
+</script>
+</body>
+</html>

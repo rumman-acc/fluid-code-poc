@@ -1,0 +1,12 @@
+{
+  "name": "fluid-mcp-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fluid MCP Server + minimal Fluid SaaS project dashboard - the customer-facing OAuth-protected MCP endpoint Claude Code connects to.",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "dependencies": {
+    "express": "^4.19.2",
+    "@modelcontextprotocol/sdk": "^1.30.0"
+  }
+}

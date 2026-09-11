@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Purchase Order Approval</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Purchase Order Approval</h1>
+  </header>
+
+  <main class="container">
+    <section class="dashboard" id="dashboard">
+      <div class="stat-card">
+        <span class="stat-value" id="stat-total">0</span>
+        <span class="stat-label">Total POs</span>
+      </div>
+      <div class="stat-card pending">
+        <span class="stat-value" id="stat-pending">0</span>
+        <span class="stat-label">Pending</span>
+      </div>
+      <div class="stat-card approved">
+        <span class="stat-value" id="stat-approved">0</span>
+        <span class="stat-label">Approved</span>
+      </div>
+      <div class="stat-card rejected">
+        <span class="stat-value" id="stat-rejected">0</span>
+        <span class="stat-label">Rejected</span>
+      </div>
+    </section>
+
+    <div class="search-bar">
+      <input type="text" id="vendor-search" class="search-input" placeholder="Search by vendor name..." />
+    </div>
+
+    <section class="po-list" id="po-list">
+      <!-- Purchase order cards are rendered here by app.js -->
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
