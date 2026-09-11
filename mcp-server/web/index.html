@@ -3,152 +3,199 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Fluid Project Dashboard</title>
+<title>Fluid</title>
 <style>
-  :root {
-    color-scheme: light dark;
-    --bg: #0f1420; --panel: #161d2e; --border: #2a3348; --text: #e7ecf7;
-    --muted: #93a0bf; --accent: #7c9cff; --accent-strong: #5a7bff; --good: #4ade80;
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text); }
-  header { padding: 20px 28px; border-bottom: 1px solid var(--border); }
-  .brand { font-size: 22px; font-weight: 700; }
-  .brand span { font-weight: 400; color: var(--muted); }
-  .subtitle { color: var(--muted); font-size: 13px; margin-top: 4px; }
-  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 24px 28px 60px; max-width: 1200px; margin: 0 auto; }
-  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; }
-  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 22px 0 10px; }
-  h2:first-child { margin-top: 0; }
-  textarea, input[type=text] { width: 100%; background: #0c1120; border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px 10px; font-size: 13px; font-family: ui-monospace, Consolas, monospace; }
-  textarea { resize: vertical; }
-  button { background: #1d2740; border: 1px solid var(--border); color: var(--text); padding: 9px 16px; border-radius: 7px; font-size: 13px; cursor: pointer; }
-  button:hover { border-color: var(--accent); }
-  button.primary { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; font-weight: 600; }
-  .code-block { background: #0c1120; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; overflow-x: auto; white-space: pre; position: relative; margin-bottom: 10px; }
-  .code-block .copy { position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 3px 8px; }
-  .step { display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px; }
-  .step .n { color: var(--muted); font-size: 12px; width: 16px; flex-shrink: 0; }
-  .activity-log { background: #0c1120; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; height: 420px; overflow-y: auto; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
-  .activity-empty { color: var(--muted); }
-  .activity-line { display: flex; gap: 8px; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-  .activity-line .time { color: var(--muted); flex-shrink: 0; }
-  .activity-line .tag { font-size: 10px; padding: 1px 6px; border-radius: 999px; background: rgba(124,156,255,0.15); color: var(--accent); flex-shrink: 0; height: fit-content; }
-  .activity-line .tag.report { background: rgba(74,222,128,0.15); color: var(--good); }
-  .notice { font-size: 12px; color: var(--muted); border-left: 3px solid var(--accent); padding: 8px 12px; background: rgba(124,156,255,0.08); border-radius: 4px; margin-top: 10px; }
-  .row { display: flex; gap: 10px; margin-top: 10px; }
+  :root { color-scheme:dark; --bg:#0b1020; --panel:#151d30; --line:#293550; --text:#edf2ff; --muted:#9ba8c7; --accent:#6385ff; --good:#43d787; --bad:#ff7070; font-family:Inter,-apple-system,"Segoe UI",sans-serif; }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text)}
+  header{padding:20px 28px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:14px}.brand{font-size:23px;font-weight:750}.brand span{font-weight:400;color:var(--muted)}.subtitle{font-size:13px;color:var(--muted)}
+  main{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1200px;margin:auto;padding:24px 28px 60px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:26px 0 12px}h2:first-child{margin-top:0}
+  textarea{width:100%;resize:vertical;background:#090f1e;border:1px solid var(--line);border-radius:8px;color:var(--text);padding:11px;font:13px/1.5 ui-monospace,Consolas,monospace}
+  button,a.button{display:inline-flex;align-items:center;justify-content:center;background:#202c48;border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:8px;font-weight:650;font-size:13px;text-decoration:none;cursor:pointer}button:hover,a.button:hover{border-color:var(--accent)}button.primary,a.primary{background:var(--accent);border-color:var(--accent);color:white}button:disabled{opacity:.45;cursor:not-allowed}
+  .connect-card{padding:18px;border:1px solid var(--line);border-radius:10px;background:#0d1426}.connect-title{display:flex;justify-content:space-between;gap:12px;align-items:center}.connect-title strong{font-size:17px}.status{font-size:11px;font-weight:750;padding:4px 9px;border-radius:999px;background:rgba(255,112,112,.14);color:var(--bad)}.status.online{background:rgba(67,215,135,.14);color:var(--good)}
+  .muted,.notice{color:var(--muted);font-size:12px;line-height:1.5}.notice{border-left:3px solid var(--accent);background:rgba(99,133,255,.08);padding:9px 12px;border-radius:4px;margin-top:14px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.device-details{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;line-height:1.8}.agent-ok{color:var(--good)}.agent-bad{color:var(--bad)}
+  .activity{height:390px;overflow:auto;background:#090f1e;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:12px/1.45 ui-monospace,Consolas,monospace}.event{display:grid;grid-template-columns:70px 1fr;gap:8px;padding:3px 0}.time{color:var(--muted)}.error{color:var(--bad)}
+  .hidden{display:none!important}.toast{margin-top:10px;color:var(--muted);font-size:12px}.toast.error{color:var(--bad)}
+  @media(max-width:850px){main{grid-template-columns:1fr;padding:18px}header{padding:18px;display:block}.subtitle{margin-top:5px}}
 </style>
 </head>
 <body>
-  <header>
-    <div class="brand">Fluid <span>Project Dashboard</span></div>
-    <div class="subtitle" id="projectName">Loading&hellip;</div>
-  </header>
-
-  <main class="layout">
-    <section class="panel">
-      <h2>Project requirements</h2>
-      <textarea id="requirements" rows="14"></textarea>
-      <div class="row">
-        <button class="primary" id="saveReq" type="button">Save</button>
-        <span id="saveStatus" style="color: var(--muted); font-size: 12px; align-self:center;"></span>
+<header><div class="brand">Fluid <span>Agent POC</span></div><div class="subtitle">Build locally with Claude Code, controlled from the web</div></header>
+<main>
+  <section class="panel">
+    <h2>Connect this computer</h2>
+    <div class="connect-card">
+      <div class="connect-title"><strong id="deviceName">Fluid Connector</strong><span id="deviceStatus" class="status">Not connected</span></div>
+      <p class="muted">Install the Fluid Connector once. It runs Claude Code on this computer using your existing login; Fluid never receives your Claude credentials.</p>
+      <div class="actions">
+        <a id="downloadBtn" class="button primary" href="#">Download &amp; Connect</a>
+        <button id="loginClaudeBtn" class="hidden">Sign in to Claude Code</button>
+        <button id="selectWorkspaceBtn" class="hidden">Select workspace</button>
       </div>
-      <p class="notice">
-        This is what <code>get_project_requirements</code> returns to Claude Code &mdash;
-        edit it here and the agent picks up the change on its next call, no prompt-editing required.
-      </p>
+      <div id="installHelp" class="notice hidden">Open the downloaded installer and approve the Windows prompt. The connector starts automatically and returns you here—no terminal commands are required.</div>
+      <div id="deviceDetails" class="device-details hidden"></div>
+      <div id="connectorMessage" class="toast"></div>
+    </div>
 
-      <h2>Connect Claude Code</h2>
-      <div class="step"><span class="n">1</span><span>Add Fluid as a remote MCP server (one time):</span></div>
-      <div class="code-block"><button class="copy" data-copy-target="cmdAdd" type="button">Copy</button><span id="cmdAdd"></span></div>
-      <div class="step"><span class="n">2</span><span>Sign in (opens a browser to authorize Fluid &mdash; your Claude subscription itself never touches Fluid):</span></div>
-      <div class="code-block"><button class="copy" data-copy-target="cmdLogin" type="button">Copy</button><span id="cmdLogin"></span></div>
-      <div class="step"><span class="n">3</span><span>Build, from inside Claude Code:</span></div>
-      <div class="code-block"><button class="copy" data-copy-target="cmdPrompt" type="button">Copy</button><span id="cmdPrompt"></span></div>
-    </section>
+    <div id="buildSection" class="hidden">
+      <h2>Build with your agent</h2>
+      <textarea id="buildPrompt" rows="8" placeholder="Describe what you want Claude Code to build..."></textarea>
+      <div class="actions"><button id="runBtn" class="primary">Run Claude Code</button></div>
+    </div>
 
-    <section class="panel">
-      <h2>Agent Activity (via MCP)</h2>
-      <div id="activityLog" class="activity-log"><div class="activity-empty">No activity reported yet.</div></div>
-      <p class="notice">
-        This feed is populated only by MCP tool calls the agent itself makes
-        (<code>get_project_requirements</code>, <code>report_agent_activity</code>) &mdash;
-        it is Fluid's audit trail, independent of anything the local Fluid Agent Bridge shows.
-      </p>
-    </section>
-  </main>
+    <h2>Project requirements</h2>
+    <textarea id="requirements" rows="12"></textarea>
+    <div class="actions"><button id="saveReq">Save requirements</button></div>
+    <div id="saveStatus" class="toast"></div>
+  </section>
 
+  <section class="panel">
+    <h2>Agent activity</h2>
+    <div id="deviceActivity" class="activity"><span class="muted">Connect a computer to see local agent activity.</span></div>
+    <h2>Fluid MCP activity</h2>
+    <div id="mcpActivity" class="activity"><span class="muted">No MCP activity reported yet.</span></div>
+  </section>
+</main>
 <script>
 (() => {
-  const el = (id) => document.getElementById(id);
-  let mcpUrl = '';
+  const $ = (id) => document.getElementById(id);
+  let deviceId = localStorage.getItem('fluidDeviceId');
+  let deviceToken = localStorage.getItem('fluidDeviceToken');
 
-  function fmtTime(iso) {
-    return new Date(iso).toLocaleTimeString('en-US', { hour12: false });
+  function headers(json = false) {
+    const value = deviceToken ? { 'x-fluid-device-token': deviceToken } : {};
+    if (json) value['Content-Type'] = 'application/json';
+    return value;
+  }
+  function eventHtml(entry) {
+    const time = new Date(entry.ts).toLocaleTimeString([], { hour12:false });
+    const message = String(entry.message || '').replace(/[&<>]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    return `<div class="event"><span class="time">${time}</span><span class="${entry.type === 'error' ? 'error' : ''}">${message}</span></div>`;
+  }
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, (character) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[character]));
+  }
+  function resetConnection() {
+    deviceId = null;
+    deviceToken = null;
+    localStorage.removeItem('fluidDeviceId');
+    localStorage.removeItem('fluidDeviceToken');
+    $('deviceName').textContent = 'Fluid Connector';
+    $('deviceStatus').textContent = 'Not connected';
+    $('deviceStatus').className = 'status';
+    $('downloadBtn').classList.remove('hidden');
+    $('loginClaudeBtn').classList.add('hidden');
+    $('selectWorkspaceBtn').classList.add('hidden');
+    $('buildSection').classList.add('hidden');
   }
 
-  function appendActivity(entry) {
-    const log = el('activityLog');
-    if (log.querySelector('.activity-empty')) log.innerHTML = '';
-    const line = document.createElement('div');
-    line.className = 'activity-line';
-    const tagClass = entry.tool === 'report_agent_activity' ? 'tag report' : 'tag';
-    line.innerHTML = `<span class="time">${fmtTime(entry.ts)}</span><span class="${tagClass}"></span><span class="msg"></span>`;
-    line.querySelector('.tag').textContent = entry.tool || entry.type;
-    line.querySelector('.msg').textContent = entry.message;
-    log.appendChild(line);
-    log.scrollTop = log.scrollHeight;
+  async function initialize() {
+    const [projectResponse, configResponse] = await Promise.all([fetch('/api/project'), fetch('/api/connector/config')]);
+    const projectData = await projectResponse.json();
+    const config = await configResponse.json();
+    $('requirements').value = projectData.project.requirements;
+    $('buildPrompt').value = 'Fetch the Fluid project requirements and build the application in the selected workspace. Report meaningful progress as you work.';
+    $('downloadBtn').href = config.downloadUrl;
+
+    const pair = new URLSearchParams(location.search).get('pair');
+    if (pair) await claimDevice(pair);
+    if (deviceId && deviceToken) {
+      await refreshDevice();
+      setInterval(refreshDevice, 2000);
+    }
+    connectMcpStream();
   }
 
-  async function loadProject() {
-    const res = await fetch('/api/project');
-    const data = await res.json();
-    el('projectName').textContent = `Project: ${data.project.name}`;
-    el('requirements').value = data.project.requirements;
-    mcpUrl = data.mcpUrl;
-    el('cmdAdd').textContent = `claude mcp add --transport http fluid ${mcpUrl}`;
-    el('cmdLogin').textContent = `claude mcp login fluid`;
-    el('cmdPrompt').textContent = `Use the Fluid MCP tools: fetch the project requirements and build exactly that in this workspace, calling report_agent_activity as you make progress.`;
+  async function claimDevice(pairingCode) {
+    $('connectorMessage').textContent = 'Pairing this computer...';
+    const response = await fetch('/api/connector/claim', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ pairingCode }) });
+    const data = await response.json();
+    if (!response.ok) {
+      $('connectorMessage').textContent = data.error;
+      $('connectorMessage').className = 'toast error';
+      return;
+    }
+    deviceId = data.deviceId;
+    deviceToken = data.controlToken;
+    localStorage.setItem('fluidDeviceId', deviceId);
+    localStorage.setItem('fluidDeviceToken', deviceToken);
+    history.replaceState({}, '', location.pathname);
+    $('connectorMessage').textContent = 'Computer paired successfully.';
   }
 
-  async function loadActivity() {
-    const res = await fetch('/api/activity');
-    const data = await res.json();
-    if (!data.activity.length) return;
-    el('activityLog').innerHTML = '';
-    data.activity.forEach(appendActivity);
+  async function refreshDevice() {
+    try {
+      const response = await fetch(`/api/connector/devices/${encodeURIComponent(deviceId)}`, { headers:headers() });
+      if (response.status === 401) {
+        resetConnection();
+        return;
+      }
+      const data = await response.json();
+      const device = data.device;
+      $('deviceName').textContent = device.name;
+      $('deviceStatus').textContent = device.online ? 'Connected' : 'Offline';
+      $('deviceStatus').className = `status ${device.online ? 'online' : ''}`;
+      $('downloadBtn').classList.add('hidden');
+      $('selectWorkspaceBtn').classList.remove('hidden');
+      $('selectWorkspaceBtn').disabled = !device.online || device.busy;
+      $('buildSection').classList.remove('hidden');
+      const claude = device.agents?.claude || {};
+      const claudeReady = claude.available && claude.authenticated;
+      $('loginClaudeBtn').classList.toggle('hidden', !claude.available || claude.authenticated);
+      $('loginClaudeBtn').disabled = !device.online;
+      $('runBtn').disabled = !device.online || !device.workspace || device.busy || !claude.available || !claude.authenticated;
+      $('deviceDetails').classList.remove('hidden');
+      const agentLabel = claude.available
+        ? `${claude.authenticated ? 'Ready' : 'Sign-in required'} (${escapeHtml(claude.version || 'detected')})`
+        : 'Not found';
+      $('deviceDetails').innerHTML = `Claude Code: <strong class="${claudeReady ? 'agent-ok' : 'agent-bad'}">${agentLabel}</strong><br>Workspace: <strong>${escapeHtml(device.workspace || 'Not selected')}</strong>`;
+      $('deviceActivity').innerHTML = data.activity.length ? data.activity.map(eventHtml).join('') : '<span class="muted">Connected. No agent activity yet.</span>';
+      $('deviceActivity').scrollTop = $('deviceActivity').scrollHeight;
+    } catch {
+      $('deviceStatus').textContent = 'Reconnecting';
+    }
   }
 
-  function connectStream() {
-    const es = new EventSource('/api/activity/stream');
-    es.onmessage = (e) => appendActivity(JSON.parse(e.data));
+  async function command(action, extra = {}) {
+    const body = JSON.stringify({ action, ...extra });
+    const response = await fetch(`/api/connector/devices/${encodeURIComponent(deviceId)}/commands`, { method:'POST', headers:headers(true), body });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Command failed');
   }
 
-  el('saveReq').addEventListener('click', async () => {
-    const status = el('saveStatus');
-    status.textContent = 'Saving…';
-    const res = await fetch('/api/project/requirements', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ requirements: el('requirements').value }),
-    });
-    status.textContent = res.ok ? 'Saved.' : 'Failed to save.';
-    setTimeout(() => (status.textContent = ''), 2000);
+  $('downloadBtn').addEventListener('click', () => $('installHelp').classList.remove('hidden'));
+  $('loginClaudeBtn').addEventListener('click', async () => {
+    try { await command('login_claude'); $('connectorMessage').textContent = 'Complete Claude sign-in in the browser window.'; }
+    catch (error) { $('connectorMessage').textContent = error.message; }
+  });
+  $('selectWorkspaceBtn').addEventListener('click', async () => {
+    try {
+      await command('select_workspace');
+      $('connectorMessage').textContent = 'Choose a folder in the window opened by Fluid Connector.';
+    } catch (error) { $('connectorMessage').textContent = error.message; }
+  });
+  $('runBtn').addEventListener('click', async () => {
+    try {
+      await command('run', { agentId:'claude', prompt:$('buildPrompt').value });
+      $('connectorMessage').textContent = 'Claude Code started.';
+      await refreshDevice();
+    } catch (error) { $('connectorMessage').textContent = error.message; }
+  });
+  $('saveReq').addEventListener('click', async () => {
+    const response = await fetch('/api/project/requirements', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ requirements:$('requirements').value }) });
+    $('saveStatus').textContent = response.ok ? 'Saved.' : 'Could not save requirements.';
   });
 
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.copy');
-    if (!btn) return;
-    const text = el(btn.dataset.copyTarget).textContent;
-    navigator.clipboard?.writeText(text);
-    btn.textContent = 'Copied';
-    setTimeout(() => (btn.textContent = 'Copy'), 1200);
-  });
-
-  loadProject();
-  loadActivity();
-  connectStream();
+  function connectMcpStream() {
+    const source = new EventSource('/api/activity/stream');
+    source.onmessage = (event) => {
+      const log = $('mcpActivity');
+      if (log.querySelector('.muted')) log.innerHTML = '';
+      log.insertAdjacentHTML('beforeend', eventHtml(JSON.parse(event.data)));
+      log.scrollTop = log.scrollHeight;
+    };
+  }
+  initialize().catch((error) => { $('connectorMessage').textContent = error.message; });
 })();
 </script>
 </body>

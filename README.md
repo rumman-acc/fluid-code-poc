@@ -28,6 +28,31 @@ Open **http://localhost:4787** in a browser.
 6. Type a follow-up instruction (e.g. "add a search box") and click **Start
    Agent** again — the agent edits the same files in place.
 
+## Hosted Windows connector POC
+
+The customer-facing dashboard can be hosted from `mcp-server/` on Render.
+It does not ask customers to run terminal commands. Instead, **Download &
+Connect** installs a per-user Windows connector which:
+
+- starts automatically at Windows login;
+- opens a one-time browser pairing link;
+- detects the customer's existing Claude Code installation and login;
+- opens a native workspace folder picker on request;
+- receives jobs over an outbound authenticated WebSocket; and
+- runs Claude Code locally and streams activity back to the hosted dashboard.
+
+Set these variables on the Render web service:
+
+```text
+FLUID_BASE_URL=https://your-render-service.onrender.com
+CONNECTOR_DOWNLOAD_URL=https://github.com/rumman-acc/fluid-code-poc/releases/download/connector-latest/FluidConnectorSetup.exe
+```
+
+The workflow in `.github/workflows/build-connector.yml` produces and publishes
+the unsigned Windows POC installer whenever connector code changes on `main`.
+The repository workflow must have permission to create release assets. Windows
+may show an unknown-publisher warning because this POC is not code-signed.
+
 ## How agent invocation actually works on this machine
 
 Neither `claude` nor `codex` was on `PATH` here — this machine only has them
@@ -149,9 +174,10 @@ being served by it. Concretely:
 Nothing about `agentDetect.js`, `CodingAgent`, `ClaudeCodeAgent`,
 `CodexAgent`, or `runManager` needs to change for this step.
 
-## Phase 3 — MCP preparation
+## Phase 3 — MCP POC
 
-Not implemented in this POC (per scope). The abstraction is ready for it:
+An initial OAuth-protected MCP implementation now lives in `mcp-server/`.
+The abstraction remains ready for further tools:
 `CodingAgent.start()` already isolates "how we talk to the agent process"
 from everything else, so adding MCP means adding a config, not restructuring
 the bridge.
@@ -212,5 +238,5 @@ Claude Code:          PASS  (2.1.266, bundled with VS Code "Claude Code" extensi
 Local Filesystem:     PASS  (files verified on disk, not just in the UI)
 Agent-generated code: PASS  (index.html/styles.css/app.js created by Claude Code, then genuinely edited in place by a second prompt)
 Local App Runtime:    PASS  (served at /app, verified 200 OK on all three files)
-MCP:                  NOT IMPLEMENTED
+MCP:                  PASS  (initial OAuth-protected requirements/activity POC)
 ```
